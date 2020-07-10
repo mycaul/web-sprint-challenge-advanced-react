@@ -19,8 +19,8 @@ test("form shows success message on submit with form details", () => {
   const state = screen.getByLabelText(/state/i)
   const zip = screen.getByLabelText(/zip/i)
 
-  fireEvent.change(firstName, { target: { value: 'Michael' }})
-  fireEvent.change(lastName, { target: { value: 'Scott' }})
+  fireEvent.change(firstName, { target: { value: 'Karen' }})
+  fireEvent.change(lastName, { target: { value: 'Lei' }})
   fireEvent.change(address, { target: { value: '123 Home St' }})
   fireEvent.change(city, { target: { value: 'San Francisco' }})
   fireEvent.change(state, { target: { value: 'CA' }})
@@ -31,8 +31,8 @@ test("form shows success message on submit with form details", () => {
   fireEvent.submit(onSubmit)
 
   const submitMessage = screen.findByTestId(/successmessage/i)
-  expect(firstName).toBeInTheDocument(/michael/i)
-  expect(lastName).toBeInTheDocument(/scott/i)
+  expect(firstName).toBeInTheDocument(/karen/i)
+  expect(lastName).toBeInTheDocument(/lei/i)
   expect(address).toBeInTheDocument(/123 home st/i)
   expect(city).toBeInTheDocument(/san francisco/i)
   expect(state).toBeInTheDocument(/ca/i)
