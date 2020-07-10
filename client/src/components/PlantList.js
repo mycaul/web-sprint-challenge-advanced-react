@@ -1,55 +1,55 @@
-import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import CheckoutForm from "./CheckoutForm";
+import React, { Component } from "react";
+import axios from "axios";
 
-// Write up the two tests here and make sure they are testing what the title shows
+export default class PlantList extends Component {
+  // add state with a property called "plants" - initialize as an empty array
+  constructor() {
+    super();
+    this.state = {
+      plants: [],
+    }
+  }
 
-test("form header renders", () => {
-    render(<CheckoutForm />)
+  // when the component mounts:
+  //   - fetch data from the server endpoint - http://localhost:3333/plants
+  componentDidMount() {
+    console.log('cDM is fetching data')
+    axios.get('http://localhost:3333/plants')
+      .then(res => 
+  //   - set the returned plants array to this.state.plants
+        this.setState({
+          plants: res.data.plantsData
+        })
+      )
+  }
+  
 
-    const header = screen.getByText(/checkout form/i)
-
-    expect(header).toBeInTheDocument()
-
-});
-
-test("form shows success message on submit with form details", () => {
-    render(<CheckoutForm />)
-
-    const firstName = screen.getByLabelText(/first name/i)
-    const lastName = screen.getByLabelText(/last name/i)
-    const address = screen.getByLabelText(/address/i)
-    const city = screen.getByLabelText(/city/i)
-    const state = screen.getByLabelText(/state/i)
-    const zip = screen.getByLabelText(/zip/i)
-
-    fireEvent.change(firstName, {
-        target: {value: "Billy" }
-      });
-    fireEvent.change(lastName, {
-        target: {value: "Bob" }
-      });
-      fireEvent.change(address, {
-        target: {value: "123 Street" }
-      });
-      fireEvent.change(city, {
-        target: {value: "London" }
-      });
-      fireEvent.change(state, {
-        target: {value: "Michigan" }
-      });
-      fireEvent.change(zip, {
-        target: {value: "54321" }
-      });
-
-
-    const submitButton = screen.getByTestId(/checkout/i)
-    fireEvent.click(submitButton)
-
-    const successMessage = screen.getByTestId('successMessage')
-    expect(successMessage).toBeInTheDocument()
-
-    const details = screen.getByText(/billy/i)
-    expect(details).toBeInTheDocument()
-
-});
+  /*********  DON'T CHANGE ANYTHING IN THE RENDER FUNCTION *********/
+  render() {
+    return (
+      <main className="plant-list">
+        {this.state?.plants?.map((plant) => (
+          <div className="plant-card" key={plant.id}>
+            <img className="plant-image" src={plant.img} alt={plant.name} />
+            <div className="plant-details">
+              <h2 className="plant-name">{plant.name}</h2>
+              <p className="plant-scientific-name">{plant.scientificName}</p>
+              <p>{plant.description}</p>
+              <div className="plant-bottom-row">
+                <p>${plant.price}</p>
+                <p>☀️ {plant.light}</p>
+                <p>💦 {plant.watering}x/month</p>
+              </div>
+              <button
+                className="plant-button"
+                onClick={() => this.props.addToCart(plant)}
+              >
+                Add to cart
+              </button>
+            </div>
+          </div>
+        ))}
+      </main>
+    );
+  }
+}
